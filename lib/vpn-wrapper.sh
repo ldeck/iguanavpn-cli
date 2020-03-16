@@ -8,6 +8,8 @@ set -e
 set -u
 # set -x
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
 OPENCONNECT=$(which openconnect)
 VPNSLICE=$(which vpn-slice)
 
@@ -58,6 +60,8 @@ HOST=$(head -n 1 "$CONFIG/host")
 SLICES=$(cat "$CONFIG/slice" | tr '\n' ' ')
 SERVERCERT=$(test -f "$CONFIG/servercert" && cat "$CONFIG/servercert")
 
+
+
 info -------------------------
 info OPENCONNECT: $OPENCONNECT
 info VPN-SLICE: $VPNSLICE
@@ -67,18 +71,32 @@ info SLICES: $SLICES
 info SERVERCERT: $SERVERCERT
 info -------------------------
 
-info "Running as sudo..."
+
+info "Kicking off keep-alive pinger."
+PINGHOSTS=$CONFIG/pinghosts
+
+BGPID=
+if [ -f $PINGHOSTS ]; then
+    $DIR/vpn-keepalive.sh $PINGHOSTS &
+    BGPID=$!
+fi
+
+
+info "Running openconnect as sudo..."
 
 if [ ! -z "$SERVERCERT" ]; then
     SERVERCERT="--servercert $SERVERCERT"
 fi
 
+
 sudo sh <<EOF
-printf '${PASSWORD}\n${SECRET}' | $OPENCONNECT \
- $SERVERCERT \
- --passwd-on-stdin \
- --user='$USERNAME' \
- -s '${VPNSLICE} ${SLICES}' \
- '$HOST'
+printf '${PASSWORD}\n${SECRET}' | $OPENCONNECT $SERVERCERT --passwd-on-stdin --user='$USERNAME' -s '${VPNSLICE} ${SLICES}' $HOST
+echo "Shutting down"
 EOF
 
+if [ ! -z BGPID ]; then
+    echo "Killing keep alive $BGPID"
+    kill $BGPID
+fi
+
+echo "Done"
