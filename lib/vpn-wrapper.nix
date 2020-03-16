@@ -27,7 +27,7 @@ let
 
 in mkShell {
    name = "vpn-env";
-   buildInputs = [ numpy toolz vpn-slice openconnect ];
+   buildInputs = [ vpn-slice openconnect ];
    shellHook = ''
      echo "Ready to slice your vpn!"
    '';
