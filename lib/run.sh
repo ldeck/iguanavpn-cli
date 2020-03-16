@@ -9,12 +9,6 @@ set -u
 VHOME=${VPNHOME:-~/.vpn}
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-if [[ $UID -ne 0 ]]; then
-    sudo -E -p 'Restarting as root for openconnect, password: ' bash $0 "$@"
-    exit $?
-fi
-
-
 read_private() {
     read -sp "$1: " $1
     echo
@@ -49,4 +43,4 @@ done
 read_private VPN_PASSWORD
 read_private VPN_SECRET
 
-sudo -E $DIR/vpn-wrapper.sh $VPROFILE $VPN_PASSWORD $VPN_SECRET
+$DIR/vpn-wrapper.sh $VPROFILE $VPN_PASSWORD $VPN_SECRET

@@ -31,6 +31,7 @@ if [[ $# -ne 3 ]]; then
     exit 1;
 fi
 
+
 CONFIG=$1
 PASSWORD=$2
 SECRET=$3
@@ -72,4 +73,12 @@ if [ ! -z "$SERVERCERT" ]; then
     SERVERCERT="--servercert $SERVERCERT"
 fi
 
-(echo "$PASSWORD"; echo "$SECRET") | sudo $OPENCONNECT $SERVERCERT --passwd-on-stdin --user="$USERNAME" $HOST -s "${VPNSLICE} ${SLICES}"
+sudo sh <<EOF
+printf '${PASSWORD}\n${SECRET}' | $OPENCONNECT \
+ $SERVERCERT \
+ --passwd-on-stdin \
+ --user='$USERNAME' \
+ -s '${VPNSLICE} ${SLICES}' \
+ '$HOST'
+EOF
+
