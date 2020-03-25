@@ -4,6 +4,10 @@ with pkgs.python37Packages;
 let
     
     python = python37;
+    openconnect = pkgs.openconnect.overrideAttrs (oldAttrs: rec {
+      buildInputs = oldAttrs.buildInputs ++ [ libproxy ];
+      configureFlags = oldAttrs.configureFlags ++ [ "--with-libproxy" ];
+    });
     vpn-slice = buildPythonPackage rec {
       name = "vpn-slice";
       version = "v0.13";
@@ -27,7 +31,7 @@ let
 
 in mkShell {
    name = "vpn-env";
-   buildInputs = [ vpn-slice openconnect ];
+   buildInputs = [ vpn-slice openconnect libproxy ];
    shellHook = ''
      echo "Ready to slice your vpn!"
    '';
