@@ -44,12 +44,25 @@ select VPROFILE in $VHOME/*/; do
     echo ">>> Invalid Selection";
 done
 
+PASSTYPE=pass+secret
+if [ -f $VPROFILE/passtype ]; then
+    PASSTYPE=$(<$VPROFILE/passtype)
+fi
 
-read_private VPN_PASSWORD
-read_private VPN_SECRET
+case $PASSTYPE in
+    secret)
+	read_private VPN_SECRET
+	PASSPHRASE=$VPN_SECRET
+	;;
+    *)
+	read_private VPN_PASSWORD
+	read_private VPN_SECRET
+	PASSPHRASE="$VPN_PASSWORD\n$VPN_SECRET"
+esac
+
 read_option WITH_VPNSLICE true
 if [[ -z $WITH_VPNSLICE ]]; then
     WITH_VPNSLICE=true
 fi
 
-$DIR/vpn-wrapper.sh $VPROFILE $VPN_PASSWORD $VPN_SECRET --with-vpnslice=$WITH_VPNSLICE
+$DIR/vpn-wrapper.sh $VPROFILE $PASSPHRASE --with-vpnslice=$WITH_VPNSLICE

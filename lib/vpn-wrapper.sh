@@ -30,8 +30,8 @@ info() {
     out $NORM $INFO "${@:1}"
 }
 
-if [[ $# -lt 3 ]]; then
-    err "Usage: $0 <config> <password> <secret> [--with-vpnslice=false]";
+if [[ $# -lt 2 ]]; then
+    err "Usage: $0 <config> <password> [--with-vpnslice=false]";
     exit 1;
 fi
 
@@ -105,7 +105,7 @@ fi
 
 
 sudo sh <<EOF
-printf '${PASSWORD}\n${SECRET}' | $OPENCONNECT $SERVERCERT --passwd-on-stdin --user='$USERNAME' $VPNC_SCRIPT $HOST
+printf '${PASSWORD}' | $OPENCONNECT $SERVERCERT --libproxy --passwd-on-stdin --user='$USERNAME' $VPNC_SCRIPT $HOST
 echo "Shutting down"
 EOF
 
