@@ -14,6 +14,11 @@ read_private() {
     echo
 }
 
+read_option() {
+    read -p "$1 [$2]: " $1
+    echo
+}
+
 usage_config() {
     echo "No vpn configs exist in $VHOME."
     echo "Run setup.sh as non-root"
@@ -42,5 +47,9 @@ done
 
 read_private VPN_PASSWORD
 read_private VPN_SECRET
+read_option WITH_VPNSLICE true
+if [[ -z $WITH_VPNSLICE ]]; then
+    WITH_VPNSLICE=true
+fi
 
-$DIR/vpn-wrapper.sh $VPROFILE $VPN_PASSWORD $VPN_SECRET
+$DIR/vpn-wrapper.sh $VPROFILE $VPN_PASSWORD $VPN_SECRET --with-vpnslice=$WITH_VPNSLICE

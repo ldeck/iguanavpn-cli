@@ -13,6 +13,8 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 OPENCONNECT=$(which openconnect)
 VPNSLICE=$(which vpn-slice)
 
+WITH_VPNSLICE=true
+
 ERR=31
 INFO=32
 BOLD=1
@@ -28,8 +30,8 @@ info() {
     out $NORM $INFO "${@:1}"
 }
 
-if [[ $# -ne 3 ]]; then
-    err "Usage: $0 <config> <password> <secret>";
+if [[ $# -lt 3 ]]; then
+    err "Usage: $0 <config> <password> <secret> [--with-vpnslice=false]";
     exit 1;
 fi
 
@@ -37,6 +39,10 @@ fi
 CONFIG=$1
 PASSWORD=$2
 SECRET=$3
+
+if [[ "$3" == "--with-vpnslice=false" ]]; then
+    WITH_VPNSLICE=false
+fi
 
 
 setup_help() {
@@ -61,14 +67,17 @@ SLICES=$(cat "$CONFIG/slice" | tr '\n' ' ')
 SERVERCERT=$(test -f "$CONFIG/servercert" && cat "$CONFIG/servercert")
 
 
-
 info -------------------------
 info OPENCONNECT: $OPENCONNECT
 info VPN-SLICE: $VPNSLICE
 info USERNAME: $USERNAME
 info HOST: $HOST
-info SLICES: $SLICES
 info SERVERCERT: $SERVERCERT
+info --
+info using vpn-slice: ${WITH_VPNSLICE}
+if [[ $WITH_VPNSLICE == "true" ]]; then
+    info SLICES: $SLICES
+fi
 info -------------------------
 
 
@@ -89,8 +98,14 @@ if [ ! -z "$SERVERCERT" ]; then
 fi
 
 
+VPNC_SCRIPT=
+if [[ $WITH_VPNSLICE == "true" ]]; then
+    VPNC_SCRIPT=" -s '${VPNSLICE} ${SLICES}' "
+fi
+
+
 sudo sh <<EOF
-printf '${PASSWORD}\n${SECRET}' | $OPENCONNECT $SERVERCERT --passwd-on-stdin --user='$USERNAME' -s '${VPNSLICE} ${SLICES}' $HOST
+printf '${PASSWORD}\n${SECRET}' | $OPENCONNECT $SERVERCERT --passwd-on-stdin --user='$USERNAME' $VPNC_SCRIPT $HOST
 echo "Shutting down"
 EOF
 
