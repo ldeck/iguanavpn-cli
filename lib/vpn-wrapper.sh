@@ -96,7 +96,7 @@ EOF
 
 if [ ! -z BGPID ]; then
     echo "Killing keep alive $BGPID"
-    kill $BGPID
+    kill -9 $BGPID
 fi
 
 echo "Done"
