@@ -73,11 +73,6 @@ info VPN-SLICE: $VPNSLICE
 info USERNAME: $USERNAME
 info HOST: $HOST
 info SERVERCERT: $SERVERCERT
-info --
-info using vpn-slice: ${WITH_VPNSLICE}
-if [[ $WITH_VPNSLICE == "true" ]]; then
-    info SLICES: $SLICES
-fi
 info -------------------------
 
 

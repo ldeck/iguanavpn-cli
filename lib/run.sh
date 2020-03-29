@@ -60,7 +60,6 @@ case $PASSTYPE in
 	PASSPHRASE="$VPN_PASSWORD\n$VPN_SECRET"
 esac
 
-read_option WITH_VPNSLICE true
 if [[ -z $WITH_VPNSLICE ]]; then
     WITH_VPNSLICE=true
 fi
