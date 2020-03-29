@@ -82,7 +82,6 @@ PINGHOSTS=$CONFIG/pinghosts
 BGPID=
 if [ -f $PINGHOSTS ]; then
     $DIR/vpn-keepalive.sh $PINGHOSTS &
-    BGPID=$!
 fi
 
 
@@ -104,9 +103,10 @@ printf '${PASSWORD}' | $OPENCONNECT $SERVERCERT --libproxy --passwd-on-stdin --u
 echo "Shutting down"
 EOF
 
-if [ ! -z BGPID ]; then
+if [ -f $PINGHOSTS ]; then
     echo "Killing keep alive $BGPID"
-    kill -9 $BGPID
+    BPID=$(ps S | grep '[v]pn-keepalive.sh' | awk '{print $1}')
+    kill -9 $BPID
 fi
 
 echo "Done"
