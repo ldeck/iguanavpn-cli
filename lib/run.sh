@@ -60,8 +60,6 @@ case $PASSTYPE in
 	PASSPHRASE="$VPN_PASSWORD\n$VPN_SECRET"
 esac
 
-if [[ -z $WITH_VPNSLICE ]]; then
-    WITH_VPNSLICE=true
-fi
+USE_VPNSLICE=${WITH_VPNSLICE:-true}
 
-$DIR/vpn-wrapper.sh $VPROFILE $PASSPHRASE --with-vpnslice=$WITH_VPNSLICE
+$DIR/vpn-wrapper.sh $VPROFILE $PASSPHRASE --with-vpnslice=$USE_VPNSLICE

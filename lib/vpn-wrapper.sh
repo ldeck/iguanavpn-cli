@@ -92,7 +92,7 @@ if [ ! -z "$SERVERCERT" ]; then
 fi
 
 
-VPNC_SCRIPT=
+VPNC_SCRIPT=""
 if [[ $WITH_VPNSLICE == "true" ]]; then
     VPNC_SCRIPT=" -s '${VPNSLICE} ${SLICES}' "
 fi
