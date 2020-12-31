@@ -38,8 +38,8 @@ fi
 echo "Select your vpn config:";
 select VPROFILE in $VHOME/*/; do
     if [ -n "$VPROFILE" ]; then
-	VPROFILE=${VPROFILE%/}
-	break;
+        VPROFILE=${VPROFILE%/}
+        break;
     fi
     echo ">>> Invalid Selection";
 done
@@ -51,15 +51,16 @@ fi
 
 case $PASSTYPE in
     secret)
-	read_private VPN_SECRET
-	PASSPHRASE=$VPN_SECRET
-	;;
+        read_private VPN_SECRET
+        PASSPHRASE=$VPN_SECRET
+        ;;
     *)
-	read_private VPN_PASSWORD
-	read_private VPN_SECRET
-	PASSPHRASE="$VPN_PASSWORD\n$VPN_SECRET"
+        read_private VPN_PASSWORD
+        read_private VPN_SECRET
+        PASSPHRASE="$VPN_PASSWORD\n$VPN_SECRET"
 esac
 
-USE_VPNSLICE=${WITH_VPNSLICE:-true}
+USE_VPNSLICE=${WITH_VPNSLICE:-false}
+echo ">>> with vpnslice: $USE_VPNSLICE"
 
 $DIR/vpn-wrapper.sh $VPROFILE $PASSPHRASE --with-vpnslice=$USE_VPNSLICE
