@@ -61,6 +61,6 @@ case $PASSTYPE in
 esac
 
 USE_VPNSLICE=${WITH_VPNSLICE:-false}
-echo ">>> with vpnslice: $USE_VPNSLICE"
+#echo ">>> with vpnslice: $USE_VPNSLICE"
 
 $DIR/vpn-wrapper.sh $VPROFILE $PASSPHRASE --with-vpnslice=$USE_VPNSLICE

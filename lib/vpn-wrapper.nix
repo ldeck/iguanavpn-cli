@@ -2,7 +2,7 @@ with import <nixpkgs> {};
 with pkgs.python37Packages;
 
 let
-    
+
     python = python37;
     openconnect = pkgs.openconnect.overrideAttrs (oldAttrs: rec {
       buildInputs = oldAttrs.buildInputs ++ [ libproxy ];
@@ -13,10 +13,10 @@ let
       version = "v0.13";
 
       src = pkgs.fetchFromGitHub {
-      	 owner = "dlenski";
-	 repo = "${name}";
-	 rev = "${version}";
-	 sha256 = "1ibrwal80z27c2mh9hx85idmzilx6cpcmgc15z3lyz57bz0krigb";
+         owner = "dlenski";
+         repo = "${name}";
+         rev = "${version}";
+         sha256 = "1ibrwal80z27c2mh9hx85idmzilx6cpcmgc15z3lyz57bz0krigb";
       };
 
       propagatedBuildInputs = [ setproctitle ];
@@ -33,6 +33,6 @@ in mkShell {
    name = "vpn-env";
    buildInputs = [ vpn-slice openconnect libproxy ];
    shellHook = ''
-     echo "Ready to slice your vpn!"
+     echo "Welcome to iguana-vpn!"
    '';
 }
