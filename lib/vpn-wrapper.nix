@@ -24,7 +24,7 @@ let
       meta = {
         homepage = "https://github.com/dlenski/vpn-slice";
         description = "vpnc-script replacement for easy and secure split-tunnel VPN setup";
-        license = stdenv.lib.licenses.gpl3Plus;
+        license = lib.licenses.gpl3Plus;
         maintainers = with maintainers; [ dlenski ];
       };
     };
